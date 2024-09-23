@@ -36,7 +36,11 @@
             "./assets/fonts/lato/Lato-SemiBold.ttf",
             "./assets/fonts/lato/Lato-Bold.ttf",
             "./assets/fonts/lato/Lato-Medium.ttf",
-            "./assets/fonts/archivo/Archivo-Regular.ttf"
+            "./assets/fonts/archivo/Archivo-Regular.ttf",
+            "./assets/fonts/inter/Inter-Regular.otf",
+            "./assets/fonts/inter/Inter-Medium.otf",
+            "./assets/fonts/inter/Inter-SemiBold.otf",
+            "./assets/fonts/inter/Inter-Bold.otf"
           ]
         }
       ]

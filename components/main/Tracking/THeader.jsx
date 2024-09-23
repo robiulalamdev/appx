@@ -24,7 +24,7 @@ const THeader = () => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => router.push("(main)/profile")}>
           <Image
-            source={GIcons.profile}
+            source={GAssets.profile}
             resizeMode="cover"
             className="w-[32px] h-[32px]"
           />

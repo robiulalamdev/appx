@@ -15,6 +15,12 @@ export default function RootLayout() {
     "Lato-SemiBold": require("../assets/fonts/lato/Lato-SemiBold.ttf"),
     "Lato-Medium": require("../assets/fonts/lato/Lato-Medium.ttf"),
     "Archivo-Regular": require("../assets/fonts/archivo/Archivo-Regular.ttf"),
+
+    // inter
+    "Inter-Regular": require("../assets/fonts/inter/Inter-Regular.otf"),
+    "Inter-Medium": require("../assets/fonts/inter/Inter-Medium.otf"),
+    "Inter-SemiBold": require("../assets/fonts/inter/Inter-SemiBold.otf"),
+    "Inter-Bold": require("../assets/fonts/inter/Inter-Bold.otf"),
   });
 
   useEffect(() => {

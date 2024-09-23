@@ -85,5 +85,3 @@ export default function NotificationScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({});
