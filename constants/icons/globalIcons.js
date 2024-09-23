@@ -9,4 +9,5 @@ export const GIcons = {
   CalendarDots: require("../../assets/icons/global/CalendarDots.png"),
   MapPin: require("../../assets/icons/global/MapPin.png"),
   HArrow: require("../../assets/icons/global/HArrow.png"),
+  backArrow: require("../../assets/icons/global/backArrow.png"),
 };

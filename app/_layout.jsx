@@ -4,7 +4,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import "../styles/global";
-import { NativeBaseProvider } from "native-base";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,10 +28,10 @@ export default function RootLayout() {
   }
 
   return (
-    <NativeBaseProvider>
+    <>
       <Stack initialRouteName="(main)">
         <Stack.Screen name="(main)" options={{ headerShown: false }} />
       </Stack>
-    </NativeBaseProvider>
+    </>
   );
 }
