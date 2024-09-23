@@ -13,9 +13,11 @@ import { GIcons } from "../../constants/icons/globalIcons";
 import HStops from "../../components/main/Home/HStops";
 import HBanner from "../../components/main/Home/HBanner";
 import HInformation from "../../components/main/Home/HInformation";
+import { useRouter } from "expo-router";
 
 export default function MainScreen() {
   const [step, setStep] = useState(1);
+  const router = useRouter();
   return (
     <SafeAreaView
       className="flex-1 bg-background"
@@ -55,7 +57,10 @@ export default function MainScreen() {
             </TouchableOpacity>
           )}
           {step === 2 && (
-            <TouchableOpacity className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]">
+            <TouchableOpacity
+              onPress={() => router.push("(main)/tracking")}
+              className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]"
+            >
               <Text className="text-white font-Lato-SemiBold leading-normal text-[16px]">
                 Send My Location
               </Text>
