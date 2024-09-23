@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .text-cmn {
+    leading-trim: both;
+    text-edge: cap;
+  }
+}
