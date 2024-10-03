@@ -10,4 +10,6 @@ export const GIcons = {
   HArrow: require("../../assets/icons/global/HArrow.png"),
   backArrow: require("../../assets/icons/global/backArrow.png"),
   uploadArrow: require("../../assets/icons/global/uploadArrow.png"),
+  eyeOff: require("../../assets/icons/global/eyeOff.png"),
+  eyeOpen: require("../../assets/icons/global/eyeOpen.png"),
 };
