@@ -22,28 +22,30 @@ export default function TrackingScreen() {
         GlobalStyleSheet.containerPB,
       ]}
     >
-      <THeader />
-      <View className="bg-[#FFF] w-full h-[48px] flex-row justify-between items-center rounded-[4px] px-[7px] mt-[17px]">
-        {["Request", "History"].map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => setSelectedTab(item)}
-            className={`flex-grow rounded-[4px] h-[34px] justify-center items-center ${
-              selectedTab === item ? "bg-[#4D6DF3]" : "bg-transparent"
-            }`}
-          >
-            <Text
-              className={`text-[14px] font-Lato-Medium leading-normal ${
-                selectedTab === item ? "text-white" : "text-[#1A1A1A]"
+      <View className="flex-1 h-full max-w-[575px] w-full mx-auto">
+        <THeader />
+        <View className="bg-[#FFF] w-full h-[48px] flex-row justify-between items-center rounded-[4px] px-[7px] mt-[17px]">
+          {["Request", "History"].map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedTab(item)}
+              className={`flex-grow rounded-[4px] h-[34px] justify-center items-center ${
+                selectedTab === item ? "bg-[#4D6DF3]" : "bg-transparent"
               }`}
             >
-              {item}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                className={`text-[14px] font-Lato-Medium leading-normal ${
+                  selectedTab === item ? "text-white" : "text-[#1A1A1A]"
+                }`}
+              >
+                {item}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        {selectedTab === "Request" && <TListTracking />}
+        {selectedTab === "History" && <TListHistory />}
       </View>
-      {selectedTab === "Request" && <TListTracking />}
-      {selectedTab === "History" && <TListHistory />}
     </SafeAreaView>
   );
 }

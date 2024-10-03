@@ -31,7 +31,7 @@ export default function ProfileScreen() {
     <View className="bg-[#F1F5F9] flex-1">
       <StatusBar />
       <SafeAreaView
-        className="flex-1"
+        className="flex-1 max-w-[575px] w-full mx-auto"
         style={[
           GlobalStyleSheet.container,
           GlobalStyleSheet.containerPT,

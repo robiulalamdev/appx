@@ -1,6 +1,5 @@
 import {
   Image,
-  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -27,45 +26,47 @@ export default function MainScreen() {
         GlobalStyleSheet.containerPB,
       ]}
     >
-      <Image
-        source={GIcons.CaretLeft}
-        resizeMode="contain"
-        className="w-[24px] h-[24px]"
-      />
-      {step === 1 && <HBanner name="Tracking Now" buttonTitle="Active" />}
-      {step === 2 && <HBanner name="Tracking Paused" buttonTitle="Passive" />}
+      <View className="flex-1 h-full max-w-[575px] w-full mx-auto">
+        <Image
+          source={GIcons.CaretLeft}
+          resizeMode="contain"
+          className="w-[24px] h-[24px]"
+        />
+        {step === 1 && <HBanner name="Tracking Now" buttonTitle="Active" />}
+        {step === 2 && <HBanner name="Tracking Paused" buttonTitle="Passive" />}
 
-      <HStops />
-      <View className="flex-col justify-between flex-grow">
-        <HInformation />
+        <HStops />
+        <View className="flex-col justify-between flex-grow">
+          <HInformation />
 
-        <View>
-          {step === 2 && (
-            <Text className="mb-[16px] text-[12px] text-center font-Archivo-Regular text-[#6B7280] leading-[18px]">
-              A Location update has been requested please click the send my
-              location button bellow
-            </Text>
-          )}
-          {step === 1 && (
-            <TouchableOpacity
-              onPress={() => setStep(2)}
-              className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]"
-            >
-              <Text className="text-white font-Lato-SemiBold leading-normal text-[16px]">
-                Resume
+          <View>
+            {step === 2 && (
+              <Text className="mb-[16px] text-[12px] text-center font-Archivo-Regular text-[#6B7280] leading-[18px]">
+                A Location update has been requested please click the send my
+                location button bellow
               </Text>
-            </TouchableOpacity>
-          )}
-          {step === 2 && (
-            <TouchableOpacity
-              onPress={() => router.push("(main)/tracking")}
-              className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]"
-            >
-              <Text className="text-white font-Lato-SemiBold leading-normal text-[16px]">
-                Send My Location
-              </Text>
-            </TouchableOpacity>
-          )}
+            )}
+            {step === 1 && (
+              <TouchableOpacity
+                onPress={() => setStep(2)}
+                className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]"
+              >
+                <Text className="text-white font-Lato-SemiBold leading-normal text-[16px]">
+                  Resume
+                </Text>
+              </TouchableOpacity>
+            )}
+            {step === 2 && (
+              <TouchableOpacity
+                onPress={() => router.push("(main)/tracking")}
+                className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]"
+              >
+                <Text className="text-white font-Lato-SemiBold leading-normal text-[16px]">
+                  Send My Location
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </View>
     </SafeAreaView>

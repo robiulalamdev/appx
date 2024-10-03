@@ -36,7 +36,7 @@ export default function NotificationScreen() {
     <View className="bg-[#E2E8F0] flex-1">
       <StatusBar />
       <SafeAreaView
-        className="flex-1"
+        className="flex-1 max-w-[575px] w-full mx-auto"
         style={[
           GlobalStyleSheet.container,
           GlobalStyleSheet.containerPT,

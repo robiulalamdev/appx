@@ -50,7 +50,10 @@ export default function RegisterUi() {
         GlobalStyleSheet.containerPB,
       ]}
     >
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        className="flex-1 max-w-[575px] w-full mx-auto"
+        showsVerticalScrollIndicator={false}
+      >
         {showOtp ? (
           <PhoneVerification setShowOtp={setShowOtp} />
         ) : (
