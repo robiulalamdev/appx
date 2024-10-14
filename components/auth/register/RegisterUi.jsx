@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -15,6 +16,9 @@ import { GIcons } from "../../../constants/icons/globalIcons";
 import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import PhoneVerification from "./PhoneVerification";
+import { useCreateUserMutation } from "../../../redux/features/user/userApi";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/features/user/userSlice";
 
 export default function RegisterUi() {
   const {
@@ -30,6 +34,10 @@ export default function RegisterUi() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
+  const [createUser, { isLoading }] = useCreateUserMutation();
+
+  const dispatch = useDispatch();
+
   const handleRegister = async (data) => {
     if (watch("confirm_password") !== watch("password")) {
       setError("confirm_password", {
@@ -38,7 +46,24 @@ export default function RegisterUi() {
       });
       return;
     }
-    setShowOtp(true);
+
+    const options = {
+      data: {
+        name: data?.name,
+        phoneNumber: data?.phone_number,
+        password: data?.password,
+        role: "Driver",
+      },
+    };
+    const result = await createUser(options);
+    if (result?.data?.data?.accessToken) {
+      await dispatch(setUser(result?.data?.data?.user));
+      setShowOtp(true);
+    }
+    if (result?.error?.data?.message) {
+      Alert.alert("Error", result?.error?.data?.message);
+    }
+    // console.log(result?.error?.data?.message);
   };
 
   return (
@@ -95,7 +120,8 @@ export default function RegisterUi() {
                     {...register("phone_number", {
                       required: "Phone Number is required",
                     })}
-                    inputMode="decimal"
+                    inputMode="text"
+                    // inputMode="decimal"
                     onChangeText={(text) => setValue("phone_number", text)}
                     placeholder="+881313782626"
                     placeholderTextColor="#1A1A1A"

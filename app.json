@@ -20,6 +20,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#F1F5F9"
       },
+      "permissions": [
+        "INTERNET"
+      ],
       "package": "com.robiulalamdx.drivereta"
     },
     "web": {

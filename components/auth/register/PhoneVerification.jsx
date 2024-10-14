@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -10,8 +11,10 @@ import React, { useRef, useState } from "react";
 import BackTitleHeader from "../../common/Headers/BackTitleHeader";
 import { GIcons } from "../../../constants/icons/globalIcons";
 import { useRouter } from "expo-router";
+import { useSelector } from "react-redux";
 
 export default function PhoneVerification({ setShowOtp }) {
+  const { user } = useSelector((state) => state.persisted.user);
   const [codes, setCodes] = useState(Array(6).fill(""));
   const refs = [
     useRef(null),
@@ -21,6 +24,8 @@ export default function PhoneVerification({ setShowOtp }) {
     useRef(null),
     useRef(null),
   ];
+
+  console.log("user: ", user);
 
   const [errorMessages, setErrorMessages] = useState();
   const router = useRouter();
@@ -94,7 +99,10 @@ export default function PhoneVerification({ setShowOtp }) {
           ))}
         </View>
         <TouchableOpacity
-          onPress={() => router.push("(main)")}
+          onPress={() => {
+            Alert.alert("Congratulations", "Account created successfully");
+            router.push("(main)");
+          }}
           className="bg-[#4D6DF3] h-[47px] w-full rounded-[4px] justify-center items-center mt-[23px]"
         >
           <Text className="text-[#FFFFFF] font-Lato-SemiBold text-[16px] leading-normal">

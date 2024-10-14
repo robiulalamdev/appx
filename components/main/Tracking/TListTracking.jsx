@@ -1,9 +1,32 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GIcons } from "../../../constants/icons/globalIcons";
 import Popover from "react-native-popover-view";
+import { useMyTrackingsQuery } from "../../../redux/features/tracking/trackingApi";
+import { useSelector } from "react-redux";
+import { router, useFocusEffect } from "expo-router";
+import { BASE_URL } from "../../../config";
+import moment from "moment";
 
 export default function TListTracking() {
+  const { user } = useSelector((state) => state.persisted.user);
+  const [data, setData] = useState([]);
+
+  const refetch = () => {
+    fetch(`${BASE_URL}/api/v1/tracking/deriver/${user?.phoneNumber}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.data?.length > 0) {
+          setData(data?.data);
+        }
+      });
+  };
+
+  useEffect(() => {
+    if (user?.phoneNumber) {
+      refetch();
+    }
+  }, [user]);
   return (
     <View className="mt-[19px]">
       <View className="flex-row justify-between items-end">
@@ -51,56 +74,77 @@ export default function TListTracking() {
         </Popover>
       </View>
 
-      <View className="bg-[#fff] w-full rounded-[8px] mt-[16px] p-[14px]">
-        <View className="flex-row justify-between items-center border-b-[1px] border-[#E2E8F0] h-[41px]">
-          <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
-            Load ID
-          </Text>
-          <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
-            2555-CBF
-          </Text>
-        </View>
-
-        <View className="flex-row justify-between items-center gap-x-[14px] h-[41px]">
-          <View className="flex-row items-center gap-x-[8px]">
-            <Image
-              source={GIcons.CalendarDots}
-              resizeMode="contain"
-              className="w-[18px] h-[18px]"
-            />
-            <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
-              Today at 2:27 PM
-            </Text>
-          </View>
-        </View>
-        <View className="flex-row justify-between items-center gap-x-[14px] h-[41px]">
-          <View className="flex-row items-center gap-x-[8px]">
-            <Image
-              source={GIcons.MapPin}
-              resizeMode="contain"
-              className="w-[18px] h-[18px]"
-            />
-            <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
-              New York
-            </Text>
-          </View>
-          <Image source={GIcons.HArrow} className="flex-[1_0_0] h-[11px]" />
-          <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
-            Tokyo
-          </Text>
-        </View>
-        <TouchableOpacity
-          className={`flex-grow rounded-[8px] h-[37px] justify-center items-center bg-[#4D6DF3] mt-[16px]`}
+      {data?.map((item, index) => (
+        <View
+          key={index}
+          className="bg-[#fff] w-full rounded-[8px] mt-[16px] p-[14px]"
         >
-          <Text
-            className={`text-[14px] font-Lato-Medium leading-normal text-white`}
-          >
-            Accept
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <View className="flex-row justify-between items-center border-b-[1px] border-[#E2E8F0] h-[41px]">
+            <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
+              Load ID
+            </Text>
+            <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
+              {item?.loadId}
+            </Text>
+          </View>
 
-      <View className="bg-[#fff] w-full rounded-[8px] mt-[16px] p-[14px]">
+          <View className="flex-row justify-between items-center gap-x-[14px] h-[41px]">
+            <View className="flex-row items-center gap-x-[8px]">
+              <Image
+                source={GIcons.CalendarDots}
+                resizeMode="contain"
+                className="w-[18px] h-[18px]"
+              />
+              <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
+                {moment(item?.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
+              </Text>
+            </View>
+          </View>
+          <View className="flex-row justify-between items-center gap-x-[14px] h-[41px]">
+            <View className="flex-row items-center gap-x-[8px]">
+              <Image
+                source={GIcons.MapPin}
+                resizeMode="contain"
+                className="w-[18px] h-[18px]"
+              />
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{ maxWidth: "45%" }}
+                className="text-[14px] font-Lato-Medium text-pb leading-normal flex-grow"
+              >
+                {item?.locations[0]?.location?.formatted}
+                {/* New York */}
+              </Text>
+            </View>
+            <Image source={GIcons.HArrow} className="flex-[1_0_0] h-[11px]" />
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={{ maxWidth: "45%" }}
+              className="text-[#333333] text-[14px] font-Lato-Medium leading-normal"
+            >
+              {
+                item?.locations[item?.locations?.length - 1]?.location
+                  ?.formatted
+              }
+              {/* Tokyo */}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => router.push(`(main)/tracking/active/${item?._id}`)}
+            className={`flex-grow rounded-[8px] h-[37px] justify-center items-center bg-[#4D6DF3] mt-[16px]`}
+          >
+            <Text
+              className={`text-[14px] font-Lato-Medium leading-normal text-white`}
+            >
+              Accept
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ))}
+
+      {/* <View className="bg-[#fff] w-full rounded-[8px] mt-[16px] p-[14px]">
         <View className="flex-row justify-between items-center border-b-[1px] border-[#E2E8F0] h-[41px]">
           <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
             Load ID
@@ -147,7 +191,7 @@ export default function TListTracking() {
             Accept
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }

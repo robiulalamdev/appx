@@ -1,7 +1,8 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import moment from "moment";
 
-export default function HInformation() {
+export default function HInformation({ item = null }) {
   return (
     <View className="bg-[#fff] w-full rounded-[8px] mt-[28px] p-[14px]">
       <View className="flex-row justify-between items-center border-b-[1px] border-[#E2E8F0] h-[41px]">
@@ -16,7 +17,7 @@ export default function HInformation() {
           </Text>
         </View>
         <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
-          John Smith
+          {item?.driverName}
         </Text>
       </View>
 
@@ -32,7 +33,7 @@ export default function HInformation() {
           </Text>
         </View>
         <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
-          2555-CBF
+          {item?.loadId}
         </Text>
       </View>
 
@@ -59,17 +60,27 @@ export default function HInformation() {
             resizeMode="contain"
             className="w-[18px] h-[18px]"
           />
-          <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
-            New York
+          <Text
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{ maxWidth: "45%" }}
+            className="text-[14px] font-Lato-Medium text-pb leading-normal flex-grow"
+          >
+            {item?.locations[0]?.location?.formatted}
           </Text>
         </View>
         <Image
           source={require("../../../assets/icons/main/home/ArrowR.png")}
           //   resizeMode="contain"
-          className="flex-[1_0_0] h-[11px]"
+          className="flex-[1_0_0] h-[11px] max-w-[10%]"
         />
-        <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
-          Tokyo
+        <Text
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{ maxWidth: "45%" }}
+          className="text-[#333333] text-[14px] font-Lato-Medium leading-normal flex-grow"
+        >
+          {item?.locations[item?.locations?.length - 1]?.location?.formatted}
         </Text>
       </View>
 
@@ -85,7 +96,7 @@ export default function HInformation() {
           </Text>
         </View>
         <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
-          10 min ago
+          {moment(item?.updatedAt).fromNow()}
         </Text>
       </View>
     </View>

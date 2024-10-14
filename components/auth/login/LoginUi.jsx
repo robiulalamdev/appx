@@ -13,6 +13,10 @@ import CMNInput from "../../common/Forms/CMNInput";
 import { GIcons } from "../../../constants/icons/globalIcons";
 import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
+import { usePostLoginMutation } from "../../../redux/features/user/userApi";
+import { useDispatch } from "react-redux";
+import { Alert } from "react-native";
+import { setUser } from "../../../redux/features/user/userSlice";
 
 export default function LoginUi() {
   const {
@@ -27,15 +31,43 @@ export default function LoginUi() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
+  const [postLogin, { isLoading }] = usePostLoginMutation();
+
+  const dispatch = useDispatch();
+
   const handleLogin = async (data) => {
-    if (watch("confirm_password") !== watch("password")) {
-      setError("confirm_password", {
+    if (!watch("phone_number")) {
+      setError("phone_number", {
         type: "manual",
-        message: "Password not matched",
+        message: "phone number is required",
       });
       return;
     }
-    router.push("(main)");
+    if (!watch("password")) {
+      setError("password", {
+        type: "manual",
+        message: "Password is required",
+      });
+      return;
+    }
+
+    const options = {
+      data: {
+        phoneNumber: data?.phone_number,
+        password: data?.password,
+      },
+    };
+    const result = await postLogin(options);
+    console.log(result);
+
+    if (result?.data?.data?.accessToken) {
+      Alert.alert("Congratulations", "Login successfully");
+      await dispatch(setUser(result?.data?.data?.user));
+      router.push("(main)/tracking");
+    }
+    if (result?.error?.data?.message) {
+      Alert.alert("Error", result?.error?.data?.message);
+    }
   };
 
   return (
@@ -72,7 +104,8 @@ export default function LoginUi() {
                   {...register("phone_number", {
                     required: "Phone Number is required",
                   })}
-                  inputMode="decimal"
+                  inputMode="text"
+                  // inputMode="decimal"
                   onChangeText={(text) => setValue("phone_number", text)}
                   placeholder="+881313782626"
                   placeholderTextColor="#1A1A1A"
