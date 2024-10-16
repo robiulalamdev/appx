@@ -18,17 +18,16 @@ import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { BASE_URL } from "../../../../config";
 import { getMyLocation } from "../../../../services/globalServices";
 
-export default function ActiveTracking() {
+export default function PassiveTracking() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  const [data, setData] = useState();
-
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSendLocation = async () => {
-    if (data?._id && data?.isActive === true) {
-      console.log("Location sending...");
+    if (data?._id) {
+      setIsLoading(true);
       const location = await getMyLocation();
       if (location?.success) {
         const locationData = {
@@ -51,6 +50,9 @@ export default function ActiveTracking() {
             if (data?.success) {
               Alert.alert("Success", "Location send successfully");
             }
+          })
+          .finally(() => {
+            setIsLoading(false);
           });
       }
     }
@@ -62,39 +64,8 @@ export default function ActiveTracking() {
       .then((data) => {
         if (data?.data) {
           setData(data?.data);
-          setInterval(() => {
-            handleSendLocation();
-          }, 15 * 60 * 1000); // 15 minutes in milliseconds
         }
       });
-  };
-
-  const handleActive = async () => {
-    if (data?._id) {
-      setIsLoading(true);
-      fetch(`${BASE_URL}/api/v1/tracking/${data?._id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          isActive: data?.isActive ? false : true,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data?.success) {
-            Alert.alert(
-              "Success",
-              `Location ${data?.isActive ? "Paused" : "Resume"} successfully`
-            );
-            refetch();
-          }
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
   };
 
   useFocusEffect(
@@ -104,30 +75,6 @@ export default function ActiveTracking() {
       }
     }, [id])
   );
-
-  useEffect(() => {
-    let interval;
-
-    if (!!data?.isActive) {
-      interval = setInterval(() => {
-        if (!!data?.isActive) {
-          handleSendLocation();
-        } else {
-          return () => {
-            if (interval) {
-              clearInterval(interval);
-            }
-          };
-        }
-      }, 1 * 60 * 1000);
-    }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [data?.isActive]);
 
   return (
     <SafeAreaView
@@ -144,17 +91,21 @@ export default function ActiveTracking() {
           resizeMode="contain"
           className="w-[24px] h-[24px]"
         />
-        <HBanner name="Tracking Now" buttonTitle="Active" />
-
+        <HBanner name="Tracking Paused" buttonTitle="Passive" />
         <HStops data={data?.locations} />
         <View className="flex-col justify-between flex-grow">
-          <HInformation item={data} />
+          <HInformation data={data} />
 
           <View>
+            <Text className="mb-[16px] text-[12px] text-center font-Archivo-Regular text-[#6B7280] leading-[18px]">
+              A Location update has been requested please click the send my
+              location button bellow
+            </Text>
+
             <TouchableOpacity
-              onPress={() => handleActive()}
+              onPress={() => handleSendLocation()}
               disabled={isLoading}
-              className="w-full h-[47px] bg-primary flex flex-row justify-center items-center rounded-[4px]"
+              className="w-full h-[47px] bg-primary flex-row justify-center items-center rounded-[4px]"
             >
               <Text>
                 {isLoading && (
@@ -166,7 +117,7 @@ export default function ActiveTracking() {
                 )}{" "}
               </Text>
               <Text className="text-white font-Lato-SemiBold leading-normal text-[16px] pb-[5px]">
-                {data?.isActive ? "Pause" : "Resume"}
+                Send My Location
               </Text>
             </TouchableOpacity>
           </View>

@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { GIcons } from "../../../constants/icons/globalIcons";
 import Popover from "react-native-popover-view";
 import { useMyTrackingsQuery } from "../../../redux/features/tracking/trackingApi";
@@ -13,20 +13,32 @@ export default function TListTracking() {
   const [data, setData] = useState([]);
 
   const refetch = () => {
-    fetch(`${BASE_URL}/api/v1/tracking/deriver/${user?.phoneNumber}`)
+    fetch(`${BASE_URL}/api/v1/tracking/deriver/request/${user?.phoneNumber}`)
       .then((res) => res.json())
       .then((data) => {
+        // console.log(data);
         if (data?.data?.length > 0) {
           setData(data?.data);
         }
       });
   };
 
-  useEffect(() => {
-    if (user?.phoneNumber) {
-      refetch();
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.phoneNumber) {
+        refetch();
+      }
+    }, [user])
+  );
+
+  const handleOpen = async (item) => {
+    if (item?.type === "active") {
+      router.push(`(main)/tracking/active/${item?._id}`);
     }
-  }, [user]);
+    if (item?.type === "passive") {
+      router.push(`(main)/tracking/passive/${item?._id}`);
+    }
+  };
   return (
     <View className="mt-[19px]">
       <View className="flex-row justify-between items-end">
@@ -132,7 +144,7 @@ export default function TListTracking() {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => router.push(`(main)/tracking/active/${item?._id}`)}
+            onPress={() => handleOpen(item)}
             className={`flex-grow rounded-[8px] h-[37px] justify-center items-center bg-[#4D6DF3] mt-[16px]`}
           >
             <Text

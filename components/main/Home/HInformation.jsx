@@ -71,7 +71,6 @@ export default function HInformation({ item = null }) {
         </View>
         <Image
           source={require("../../../assets/icons/main/home/ArrowR.png")}
-          //   resizeMode="contain"
           className="flex-[1_0_0] h-[11px] max-w-[10%]"
         />
         <Text
