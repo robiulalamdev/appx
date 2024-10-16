@@ -1,7 +1,11 @@
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { GIcons } from "../../../constants/icons/globalIcons";
 import Popover from "react-native-popover-view";
+import { useSelector } from "react-redux";
+import { useFocusEffect } from "expo-router";
+import { BASE_URL } from "../../../config";
+import moment from "moment";
 
 const items = [
   {
@@ -35,6 +39,27 @@ const items = [
 ];
 
 export default function TListHistory() {
+  const { user } = useSelector((state) => state.persisted.user);
+  const [data, setData] = useState([]);
+
+  const refetch = () => {
+    fetch(`${BASE_URL}/api/v1/tracking/deriver/history/${user?.phoneNumber}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data?.data?.length > 0) {
+          setData(data?.data);
+        }
+      });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.phoneNumber) {
+        refetch();
+      }
+    }, [user])
+  );
   return (
     <View className="mt-[19px]">
       <View className="flex-row justify-between items-end">
@@ -86,7 +111,7 @@ export default function TListHistory() {
         showsVerticalScrollIndicator={false}
         className="mt-[16px] mb-[150px]"
       >
-        {items.map((item, index) => (
+        {data?.map((item, index) => (
           <View
             key={index}
             className="bg-[#fff] w-full rounded-[8px] p-[14px] mb-[16px]"
@@ -97,7 +122,7 @@ export default function TListHistory() {
               </Text>
               <View className="w-[86px] h-[21px] bg-primary35 rounded-[29px] justify-center items-center">
                 <Text className="text-[#4C6EF6] text-[12px] font-Lato-Medium leading-normal">
-                  {item.status}
+                  {item?.loadStatus}
                 </Text>
               </View>
             </View>
@@ -110,7 +135,7 @@ export default function TListHistory() {
                   className="w-[18px] h-[18px]"
                 />
                 <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
-                  {item.date}
+                  {moment(item?.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
                 </Text>
               </View>
             </View>
@@ -121,13 +146,26 @@ export default function TListHistory() {
                   resizeMode="contain"
                   className="w-[18px] h-[18px]"
                 />
-                <Text className="text-[14px] font-Lato-Medium text-pb leading-normal">
-                  {item.location.from}
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={{ maxWidth: "45%" }}
+                  className="text-[14px] font-Lato-Medium text-pb leading-normal"
+                >
+                  {item?.locations[0]?.location?.formatted}
                 </Text>
               </View>
               <Image source={GIcons.HArrow} className="flex-[1_0_0] h-[11px]" />
-              <Text className="text-[#333333] text-[14px] font-Lato-Medium leading-normal">
-                {item.location.to}
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{ maxWidth: "45%" }}
+                className="text-[#333333] text-[14px] font-Lato-Medium leading-normal"
+              >
+                {
+                  item?.locations[item?.locations?.length - 1]?.location
+                    ?.formatted
+                }
               </Text>
             </View>
             <TouchableOpacity
