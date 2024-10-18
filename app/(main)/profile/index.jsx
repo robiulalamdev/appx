@@ -15,8 +15,14 @@ import { Image } from "react-native";
 import { GAssets } from "../../../constants/assets/globalAssets";
 import { GIcons } from "../../../constants/icons/globalIcons";
 import { pickImageFromGallery } from "../../../services/globalServices";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/features/user/userSlice";
+import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
   const [imageUri, setImageUri] = useState(null);
 
   const handleInputImage = async () => {
@@ -26,6 +32,11 @@ export default function ProfileScreen() {
     } else {
       Alert.alert("Error", result.message);
     }
+  };
+
+  const handleLogout = async () => {
+    dispatch(setUser(null));
+    router.push("(auth)");
   };
   return (
     <View className="bg-[#F1F5F9] flex-1">
@@ -106,6 +117,14 @@ export default function ProfileScreen() {
             </View>
           </View>
 
+          <TouchableOpacity
+            onPress={() => handleLogout()}
+            className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]"
+          >
+            <Text className="text-white font-Lato-SemiBold leading-normal text-[16px]">
+              Log out
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity className="w-full h-[47px] bg-primary justify-center items-center rounded-[4px]">
             <Text className="text-white font-Lato-SemiBold leading-normal text-[16px]">
               Save
