@@ -86,11 +86,13 @@ export default function PassiveTracking() {
       ]}
     >
       <View className="flex-1 h-full max-w-[575px] w-full mx-auto">
-        <Image
-          source={GIcons.CaretLeft}
-          resizeMode="contain"
-          className="w-[24px] h-[24px]"
-        />
+        <TouchableOpacity onPress={() => router.back()}>
+          <Image
+            source={GIcons.CaretLeft}
+            resizeMode="contain"
+            className="w-[24px] h-[24px]"
+          />
+        </TouchableOpacity>
         <HBanner name="Tracking Paused" buttonTitle="Passive" />
         <HStops data={data?.locations} />
         <View className="flex-col justify-between flex-grow">

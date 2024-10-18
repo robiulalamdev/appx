@@ -139,11 +139,13 @@ export default function ActiveTracking() {
       ]}
     >
       <View className="flex-1 h-full max-w-[575px] w-full mx-auto">
-        <Image
-          source={GIcons.CaretLeft}
-          resizeMode="contain"
-          className="w-[24px] h-[24px]"
-        />
+        <TouchableOpacity onPress={() => router.back()}>
+          <Image
+            source={GIcons.CaretLeft}
+            resizeMode="contain"
+            className="w-[24px] h-[24px]"
+          />
+        </TouchableOpacity>
         <HBanner name="Tracking Now" buttonTitle="Active" />
 
         <HStops data={data?.locations} />
