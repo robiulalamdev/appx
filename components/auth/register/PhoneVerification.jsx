@@ -25,7 +25,7 @@ export default function PhoneVerification({ setShowOtp }) {
     useRef(null),
   ];
 
-  console.log("user: ", user);
+  // console.log("user: ", user);
 
   const [errorMessages, setErrorMessages] = useState();
   const router = useRouter();

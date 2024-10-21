@@ -1,8 +1,12 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { GlobalStyleSheet } from "../../../constants/StyleSheet";
 import { StatusBar } from "expo-status-bar";
 import NHeader from "../../../components/main/notification/NHeader";
+import { useSelector } from "react-redux";
+import { BASE_URL } from "../../../config";
+import { useFocusEffect } from "expo-router";
+import moment from "moment";
 
 const items = [
   {
@@ -32,6 +36,27 @@ const items = [
 ];
 
 export default function NotificationScreen() {
+  const { user } = useSelector((state) => state.persisted.user);
+  const [data, setData] = useState([]);
+
+  const refetch = () => {
+    fetch(`${BASE_URL}/api/v1/tracking/deriver/${user?.phoneNumber}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.data?.length > 0) {
+          setData(data?.data);
+        }
+      });
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.phoneNumber) {
+        refetch();
+      }
+    }, [user])
+  );
+
   return (
     <View className="bg-[#E2E8F0] flex-1">
       <StatusBar />
@@ -49,7 +74,7 @@ export default function NotificationScreen() {
           showsVerticalScrollIndicator={false}
           className="mt-[24.92px]"
         >
-          {items.map((item, index) => (
+          {data.map((item, index) => (
             <View
               key={index}
               className="bg-white w-full rounded-[4px] p-[16px] mb-[16px]"
@@ -57,10 +82,42 @@ export default function NotificationScreen() {
               <View className="flex-row gap-x-[10px]">
                 <View
                   className={`w-[10px] h-[10px] rounded-full mt-[4px] ${
-                    (item.type === "Assignment" && "bg-[#51CD5D]") ||
-                    (item.type === "Upcoming" && "bg-[#FFCA12]") ||
-                    (item.type === "Acceptance" && "bg-[#5466FF]") ||
-                    (item.type === "Pending" && "bg-[#51CD5D]")
+                    (item?.type === "Assignment" && "bg-[#51CD5D]") ||
+                    (item?.type === "Upcoming" && "bg-[#FFCA12]") ||
+                    (item?.type === "Acceptance" && "bg-[#5466FF]") ||
+                    (item?.type === "Pending" && "bg-[#51CD5D]") ||
+                    "bg-[#51CD5D]"
+                  }`}
+                ></View>
+                <View>
+                  <Text className="text-[16px] font-Lato-Medium text-[#1A1A1A] leading-[22.4px]">
+                    {item.title || "New Job Assignment Notification"}
+                  </Text>
+                  <View className="flex-row items-center gap-[4px] mt-[6px]">
+                    <Text className="text-[12px] font-Lato-Medium text-[#6B7280] leading-[16.8px]">
+                      Notification
+                    </Text>
+                    <View className="w-[2px] h-[2px] rounded-full bg-[#6B7280]"></View>
+                    <Text className="text-[12px] font-Lato-Medium text-[#6B7280] leading-[16.8px]">
+                      {moment(item?.createdAt).fromNow()}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          ))}
+          {/* {items.map((item, index) => (
+            <View
+              key={index}
+              className="bg-white w-full rounded-[4px] p-[16px] mb-[16px]"
+            >
+              <View className="flex-row gap-x-[10px]">
+                <View
+                  className={`w-[10px] h-[10px] rounded-full mt-[4px] ${
+                    (item?.type === "Assignment" && "bg-[#51CD5D]") ||
+                    (item?.type === "Upcoming" && "bg-[#FFCA12]") ||
+                    (item?.type === "Acceptance" && "bg-[#5466FF]") ||
+                    (item?.type === "Pending" && "bg-[#51CD5D]")
                   }`}
                 ></View>
                 <View>
@@ -79,7 +136,7 @@ export default function NotificationScreen() {
                 </View>
               </View>
             </View>
-          ))}
+          ))} */}
         </ScrollView>
       </SafeAreaView>
     </View>

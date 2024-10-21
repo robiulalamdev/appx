@@ -3,7 +3,7 @@ import React, { useCallback, useState } from "react";
 import { GIcons } from "../../../constants/icons/globalIcons";
 import Popover from "react-native-popover-view";
 import { useSelector } from "react-redux";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { BASE_URL } from "../../../config";
 import moment from "moment";
 
@@ -39,6 +39,7 @@ const items = [
 ];
 
 export default function TListHistory() {
+  const router = useRouter();
   const { user } = useSelector((state) => state.persisted.user);
   const [data, setData] = useState([]);
 
@@ -60,6 +61,15 @@ export default function TListHistory() {
       }
     }, [user])
   );
+
+  const handleOpen = async (item) => {
+    if (item?.type === "active") {
+      router.push(`(main)/tracking/active/${item?._id}`);
+    }
+    if (item?.type === "passive") {
+      router.push(`(main)/tracking/passive/${item?._id}`);
+    }
+  };
   return (
     <View className="mt-[19px]">
       <View className="flex-row justify-between items-end">
@@ -169,6 +179,16 @@ export default function TListHistory() {
               </Text>
             </View>
             <TouchableOpacity
+              onPress={() => handleOpen(item)}
+              className={`flex-grow rounded-[8px] h-[37px] justify-center items-center bg-[#4D6DF3] mt-[16px]`}
+            >
+              <Text
+                className={`text-[14px] font-Lato-Medium leading-normal text-white`}
+              >
+                View
+              </Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity
               className={`flex-grow rounded-[8px] h-[37px] justify-center items-center bg-[#4D6DF3] mt-[16px]`}
             >
               <Text
@@ -176,7 +196,7 @@ export default function TListHistory() {
               >
                 Accept
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         ))}
       </ScrollView>
